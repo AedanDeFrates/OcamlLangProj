@@ -61,10 +61,11 @@ let round_dfrac d x =
   let m = 10. ** (float d) in                       (* m moves 10^-d to 1. *)
   (floor ((x *. m) +. 0.5)) /. m
 
-(** [typeof env e] is the type of [e] in context [env]. 
+  (** [typeof env e] is the type of [e] in context [env]. 
     Raises: [Failure] if [e] is not well typed in [env]. *)
 let rec typeof env = function
   | Int _ -> TInt
+  (*Type Float to TFloat*)
   | Bool _ -> TBool
   | Var x -> lookup env x
   | Let (x, t ,e1, e2) -> typeof_let env x t e1 e2
@@ -85,9 +86,17 @@ and typeof_let env x t e1 e2 =
 and typeof_bop env bop e1 e2 =
   let t1, t2 = typeof env e1, typeof env e2 in
   match bop, t1, t2 with
+  (*subtraction Int Int *)
+  (*divide Int Int *)
   | Add, TInt, TInt 
   | Mult, TInt, TInt -> TInt
+  (*Add Float Float *)
+  (*Sutract Float Float *)
+  (*Divide Float Float *)
+  (*Multiply Float Float *)
   | Leq, TInt, TInt -> TBool
+  (*Leq Float Float*)
+  (*Leq Float Int*)
   | _ -> failwith bop_err
   
 (** Helper function for [typeof]. *)
@@ -114,6 +123,7 @@ let rec subst e v x = match e with
   | Var y -> if x = y then v else e
   | Bool _ -> e
   | Int _ -> e
+  (*must implement Float*)
   | Binop (bop, e1, e2) -> Binop (bop, subst e1 v x, subst e2 v x)
   | Let (y, t, e1, e2) ->
     let e1' = subst e1 v x in
@@ -126,7 +136,8 @@ let rec subst e v x = match e with
   
 (** [eval e] the [v]such that [e ==> v]. *)
 let rec eval (e : expr) : expr = match e with
-  | Int _ | Bool _ -> e
+  | Int _ | Bool _ -> e 
+  (*Implements Float*)
   | Var _ -> failwith unbound_var_err
   | Binop (bop, e1, e2) -> eval_bop bop e1 e2
   | Let (x, _, e1, e2) -> subst e2 (eval e1) x|> eval
@@ -144,6 +155,11 @@ and eval_bop bop e1 e2 =
   match bop, eval e1, eval e2 with
   | Add, Int a, Int b -> Int (a + b)
   | Mult, Int a, Int b -> Int (a * b)
+  (*Minus, Int Int*)
+  (*Divide, Int Int*)
+
+  (*Add, Minus, Divide, Mult Float Float*)
+
   | Leq , Int a, Int b -> Bool (a <= b)
   | _ -> failwith bop_err
 

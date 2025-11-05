@@ -5,6 +5,7 @@ open Parser
 let white = [' ' '\t']+
 let digit = ['0'-'9']
 let int = '-'? digit+
+(*regex for parsing 'float'*)
 let letter = ['a'-'z' 'A'-'Z']
 let id = letter+
 
@@ -14,6 +15,10 @@ rule read =
   | "true" { TRUE }
   | "false" { FALSE }
   | "<=" { LEQ }
+
+  (*symbol for MINUS*)
+  (*symbol for DIVIDE*)
+
   | "*" { TIMES }
   | "+" { PLUS }
   | "(" { LPAREN }
@@ -25,6 +30,9 @@ rule read =
   | "then" { THEN }
   | "else" { ELSE }
   | ":" {COLON}
+
+  (*type symbol for FLOAT_TYPE*)
+
   | "int" {INT_TYPE}
   | "bool" {BOOL_TYPE}
   | id { ID (Lexing.lexeme lexbuf) }

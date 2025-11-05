@@ -7,6 +7,11 @@ open Ast
 %token TRUE
 %token FALSE
 %token LEQ
+
+//Add Token for FLOAT_TYPE data type
+//Add Token for MINUS
+//Add Token for DIVIDE
+
 %token TIMES
 %token PLUS
 %token LPAREN
@@ -38,12 +43,15 @@ prog:
 	
 expr:
 	| i = INT { Int i }
+	//expr parser for FLOAT
   	| x = ID { Var x }
   	| TRUE { Bool true }
   	| FALSE { Bool false }
   	| e1 = expr; LEQ; e2 = expr { Binop (Leq, e1, e2) }
   	| e1 = expr; TIMES; e2 = expr { Binop (Mult, e1, e2) }
   	| e1 = expr; PLUS; e2 = expr { Binop (Add, e1, e2) }
+	//implement expression handler for Subtraction
+	//implement expression handler for Division
   	| LET; x = ID; COLON; t = typ; EQUALS; e1 = expr; IN; e2 = expr 
 		{ Let (x, t, e1, e2) }
   	| IF; e1 = expr; THEN; e2 = expr; ELSE; e3 = expr { If (e1, e2, e3) }
@@ -53,3 +61,4 @@ expr:
 typ: 
 	| INT_TYPE { TInt }
 	| BOOL_TYPE { TBool }
+	//add type for float

@@ -1,11 +1,14 @@
 type bop = 
   | Add
+  (*Subt*)
+  (*Divd*)
   | Mult
   | Leq
 
 (** [typ] represents the type of an expression. *)
 type typ =
   | TInt
+  (*add type for TFloat???*)
   | TBool
 
 type expr = 
