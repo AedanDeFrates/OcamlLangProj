@@ -1,6 +1,7 @@
 type bop = 
   | Add
-  (*Subt*)
+  (*Subtr*)
+  | Subtr
   (*Divd*)
   | Mult
   | Leq

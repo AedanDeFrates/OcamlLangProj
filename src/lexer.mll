@@ -6,6 +6,7 @@ let white = [' ' '\t']+
 let digit = ['0'-'9']
 let int = '-'? digit+
 (*regex for parsing 'float'*)
+
 let letter = ['a'-'z' 'A'-'Z']
 let id = letter+
 
@@ -17,6 +18,7 @@ rule read =
   | "<=" { LEQ }
 
   (*symbol for MINUS*)
+  | "-" { MINUS}
   (*symbol for DIVIDE*)
 
   | "*" { TIMES }
