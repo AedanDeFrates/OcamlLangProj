@@ -49,10 +49,15 @@ open Ast
 //Precedence Declarations
 
 %left LEQ 
+
 //Add precendence for MINUS
 %left PLUS MINUS
 //Add precendence for DIVIDE
 %left TIMES DIVIDE
+
+//Add precedence for Float Operations
+%left FPLUS FMINUS
+%left FTIMES FDIVIDE
 
 
 %start <Ast.expr> prog
