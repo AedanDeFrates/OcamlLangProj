@@ -86,8 +86,11 @@ and typeof_let env x t e1 e2 =
 and typeof_bop env bop e1 e2 =
   let t1, t2 = typeof env e1, typeof env e2 in
   match bop, t1, t2 with
-  (*divide Int Int *)(*subtraction Int Int *)
+  (*divide Int Int *)
+  | Divd, TInt, TInt -> TInt
+  (*subtraction Int Int *)
   | Subtr, TInt, TInt
+
   | Add, TInt, TInt 
   | Mult, TInt, TInt -> TInt
   (*Add Float Float *)
@@ -158,8 +161,12 @@ and eval_bop bop e1 e2 =
   (*Minus, Int Int*)
   | Subtr, Int a, Int b -> Int (a - b)
   (*Divide, Int Int*)
+  | Divd, Int a, Int b -> Int (a / b)
+  (*Add, Float Float*)
+  (*Minus, Float Float*)
+  (*Divide, Float Float*)
+  (*Mult, Float Float*)
 
-  (*Add, Minus, Divide, Mult Float Float*)
 
   | Leq , Int a, Int b -> Bool (a <= b)
   | _ -> failwith bop_err
