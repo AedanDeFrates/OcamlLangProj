@@ -1,6 +1,8 @@
 %{
 open Ast
 %}
+//Define FLOAT token
+%token <float> FLOAT
 
 %token <int> INT
 %token <string> ID
@@ -8,7 +10,7 @@ open Ast
 %token FALSE
 %token LEQ
 
-//Add Token for FLOAT_TYPE data type
+
 //Add Token for MINUS
 %token MINUS
 
@@ -26,6 +28,10 @@ open Ast
 %token THEN
 %token ELSE
 %token COLON
+
+//Add Token for FLOAT_TYPE data type
+%token FLOAT_TYPE
+
 %token INT_TYPE
 %token BOOL_TYPE
 %token EOF
@@ -53,7 +59,7 @@ prog:
 expr:
 	| i = INT { Int i }
 	//expr parser for FLOAT
-
+	| f = FLOAT { Float f }
   	| x = ID { Var x }
   	| TRUE { Bool true }
   	| FALSE { Bool false }
@@ -77,4 +83,6 @@ expr:
 typ: 
 	| INT_TYPE { TInt }
 	| BOOL_TYPE { TBool }
+	//Add parsing rule for FLOAT_TYPE
+	| FLOAT_TYPE { TFloat }
 	;

@@ -10,10 +10,11 @@ type bop =
 (** [typ] represents the type of an expression. *)
 type typ =
   | TInt
-  (*add type for TFloat???*)
+  (*add type for TFloat*)
+  | TFloat
   | TBool
 
-type expr = 
+  type expr = 
 | Var of string
 | Int of int
 | Bool of bool

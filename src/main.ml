@@ -93,13 +93,19 @@ and typeof_bop env bop e1 e2 =
 
   | Add, TInt, TInt 
   | Mult, TInt, TInt -> TInt
+
   (*Add Float Float *)
   (*Sutract Float Float *)
   (*Divide Float Float *)
   (*Multiply Float Float *)
+
   | Leq, TInt, TInt -> TBool
   (*Leq Float Float*)
+  | Leq, TFloat, TFloat -> TBool
   (*Leq Float Int*)
+  | Leq, TFloat, TInt -> TBool
+  (*Leq Int Float*)
+  | Leq, TInt, TFloat -> TBool
   | _ -> failwith bop_err
   
 (** Helper function for [typeof]. *)
@@ -127,6 +133,8 @@ let rec subst e v x = match e with
   | Bool _ -> e
   | Int _ -> e
   (*must implement Float*)
+  | Float _ -> e
+
   | Binop (bop, e1, e2) -> Binop (bop, subst e1 v x, subst e2 v x)
   | Let (y, t, e1, e2) ->
     let e1' = subst e1 v x in
@@ -135,17 +143,17 @@ let rec subst e v x = match e with
     else Let (y, t, e1', subst e2 v x)
   | If (e1, e2, e3) -> 
     If (subst e1 v x, subst e2 v x, subst e3 v x)
-  | _ -> failwith "TODO"
+  (*| _ -> failwith "TODO"**)
   
 (** [eval e] the [v]such that [e ==> v]. *)
 let rec eval (e : expr) : expr = match e with
-  | Int _ | Bool _ -> e 
   (*Implements Float*)
+  | Int _ | Float _ | Bool _ -> e 
   | Var _ -> failwith unbound_var_err
   | Binop (bop, e1, e2) -> eval_bop bop e1 e2
   | Let (x, _, e1, e2) -> subst e2 (eval e1) x|> eval
   | If (e1, e2, e3) -> eval_if e1 e2 e3
-  | _ -> failwith "TODO"
+  (*| _ -> failwith "TODO"*)
 
 (** [eval_let x e1 e2] is the [v] such that [let x = e1 in e2 ==> v]. *) 
 and eval_let x e1 e2 = 
