@@ -95,7 +95,8 @@ and typeof_bop env bop e1 e2 =
   | Mult, TInt, TInt -> TInt
 
   (*Add Float Float *)
-  (*Sutract Float Float *)
+  | Add, TFloat, TFloat -> TFloat
+  (*Subtract Float Float *)
   (*Divide Float Float *)
   (*Multiply Float Float *)
 
@@ -166,12 +167,13 @@ and eval_bop bop e1 e2 =
   match bop, eval e1, eval e2 with
   | Add, Int a, Int b -> Int (a + b)
   | Mult, Int a, Int b -> Int (a * b)
-  (*Minus, Int Int*)
+  (*Subtract, Int Int*)
   | Subtr, Int a, Int b -> Int (a - b)
   (*Divide, Int Int*)
   | Divd, Int a, Int b -> Int (a / b)
   (*Add, Float Float*)
-  (*Minus, Float Float*)
+  | Add, Float a, Float b -> Float (round_dfrac 6 (a +. b))
+  (*Subtract, Float Float*)
   (*Divide, Float Float*)
   (*Mult, Float Float*)
 
