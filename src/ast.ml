@@ -5,6 +5,13 @@ type bop =
   (*Divd*)
   | Divd
   | Mult
+
+  (*bop for Floats*)
+  | FAdd
+  | FSubtr
+  | FDivd
+  | FMult
+  
   | Leq
 
 (** [typ] represents the type of an expression. *)

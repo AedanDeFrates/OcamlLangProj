@@ -96,13 +96,13 @@ and typeof_bop env bop e1 e2 =
   | Mult, TInt, TInt -> TInt
 
   (*Add Float Float *)
-  | Add, TFloat, TFloat -> TFloat
+  | FAdd, TFloat, TFloat -> TFloat
   (*Subtract Float Float *)
-  | Subtr, TFloat, TFloat -> TFloat
+  | FSubtr, TFloat, TFloat -> TFloat
   (*Divide Float Float *)
-  | Divd, TFloat, TFloat -> TFloat
+  | FDivd, TFloat, TFloat -> TFloat
   (*Multiply Float Float *)
-  | Mult, TFloat, TFloat -> TFloat
+  | FMult, TFloat, TFloat -> TFloat
 
   (*Leq Int Int*)
   | Leq, TInt, TInt -> TBool
@@ -177,13 +177,13 @@ and eval_bop bop e1 e2 =
   (*Divide, Int Int*)
   | Divd, Int a, Int b -> Int (a / b)
   (*Add, Float Float*)
-  | Add, Float a, Float b -> Float (round_dfrac 6 (a +. b))
+  | FAdd, Float a, Float b -> Float (round_dfrac 6 (a +. b))
   (*Subtract, Float Float*)
-  | Subtr, Float a, Float b -> Float (round_dfrac 6 (a -. b))
+  | FSubtr, Float a, Float b -> Float (round_dfrac 6 (a -. b))
   (*Divide, Float Float*)
-  | Divd, Float a, Float b -> Float (round_dfrac 6 (a /. b))
+  | FDivd, Float a, Float b -> Float (round_dfrac 6 (a /. b))
   (*Mult, Float Float*)
-  | Mult, Float a, Float b -> Float (round_dfrac 6 (a *. b))
+  | FMult, Float a, Float b -> Float (round_dfrac 6 (a *. b))
 
   (*Leq, Float Float*)
   | Leq , Float a, Float b -> Bool (a <= b)

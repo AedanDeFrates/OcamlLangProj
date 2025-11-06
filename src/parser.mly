@@ -19,6 +19,13 @@ open Ast
 
 %token TIMES
 %token PLUS
+
+//Add Float Operation Tokens
+%token FMINUS
+%token FDIVIDE
+%token FTIMES
+%token FPLUS
+
 %token LPAREN
 %token RPAREN
 %token LET
@@ -73,6 +80,12 @@ expr:
 	| e1 = expr; MINUS; e2 = expr { Binop (Subtr, e1, e2)}
 	//implement expression handler for Division
 	| e1 = expr; DIVIDE; e2 = expr { Binop (Divd, e1, e2)}
+
+	//implement expression handlers for Float operations
+	| e1 = expr; FTIMES; e2 = expr { Binop (FMult, e1, e2) }
+	| e1 = expr; FPLUS; e2 = expr { Binop (FAdd, e1, e2) }
+	| e1 = expr; FMINUS; e2 = expr { Binop (FSubtr, e1, e2) }
+	| e1 = expr; FDIVIDE; e2 = expr { Binop (FDivd, e1, e2) }
 
   	| LET; x = ID; COLON; t = typ; EQUALS; e1 = expr; IN; e2 = expr 
 		{ Let (x, t, e1, e2) }

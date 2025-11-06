@@ -26,6 +26,13 @@ rule read =
   
   | "*" { TIMES }
   | "+" { PLUS }
+
+  (*symbols for Float Operands*)
+  | "-." { FMINUS }
+  | "/." { FDIVIDE }
+  | "*." { FTIMES }
+  | "+." { FPLUS }
+
   | "(" { LPAREN }
   | ")" { RPAREN }
   | "let" { LET }
