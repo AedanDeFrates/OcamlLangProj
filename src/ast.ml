@@ -3,6 +3,7 @@ type bop =
   (*Subtr*)
   | Subtr
   (*Divd*)
+  | Divd
   | Mult
   | Leq
 

@@ -20,7 +20,8 @@ rule read =
   (*symbol for MINUS*)
   | "-" { MINUS}
   (*symbol for DIVIDE*)
-
+  | "/" { DIVIDE }
+  
   | "*" { TIMES }
   | "+" { PLUS }
   | "(" { LPAREN }
