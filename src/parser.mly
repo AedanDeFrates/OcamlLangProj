@@ -13,6 +13,7 @@ open Ast
 %token MINUS
 
 //Add Token for DIVIDE
+%token DIVIDE
 
 %token TIMES
 %token PLUS
@@ -31,9 +32,15 @@ open Ast
 
 %nonassoc IN
 %nonassoc ELSE
-%left LEQ
-%left PLUS
-%left TIMES
+
+//Precedence Declarations
+
+%left LEQ 
+//Add precendence for MINUS
+%left PLUS MINUS
+//Add precendence for DIVIDE
+%left TIMES DIVIDE
+
 
 %start <Ast.expr> prog
 
@@ -50,12 +57,16 @@ expr:
   	| x = ID { Var x }
   	| TRUE { Bool true }
   	| FALSE { Bool false }
+
+
   	| e1 = expr; LEQ; e2 = expr { Binop (Leq, e1, e2) }
   	| e1 = expr; TIMES; e2 = expr { Binop (Mult, e1, e2) }
   	| e1 = expr; PLUS; e2 = expr { Binop (Add, e1, e2) }
+
 	//implement expression handler for Subtraction
 	| e1 = expr; MINUS; e2 = expr { Binop (Subtr, e1, e2)}
 	//implement expression handler for Division
+	| e1 = expr; DIVIDE; e2 = expr { Binop (Divd, e1, e2)}
 
   	| LET; x = ID; COLON; t = typ; EQUALS; e1 = expr; IN; e2 = expr 
 		{ Let (x, t, e1, e2) }
@@ -66,3 +77,4 @@ expr:
 typ: 
 	| INT_TYPE { TInt }
 	| BOOL_TYPE { TBool }
+	;
