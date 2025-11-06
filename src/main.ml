@@ -66,12 +66,13 @@ let round_dfrac d x =
 let rec typeof env = function
   | Int _ -> TInt
   (*Type Float to TFloat*)
+  | Float _ -> TFloat
   | Bool _ -> TBool
   | Var x -> lookup env x
   | Let (x, t ,e1, e2) -> typeof_let env x t e1 e2
   | Binop (bop, e1, e2) -> typeof_bop env bop e1 e2
   | If (e1, e2, e3) -> typeof_if env e1 e2 e3
-  | _ -> failwith "TODO"
+  (*| _ -> failwith "TODO"*)
   
 (** Helper function for [typeof]. *)
 and typeof_let env x t e1 e2 = 
@@ -97,9 +98,13 @@ and typeof_bop env bop e1 e2 =
   (*Add Float Float *)
   | Add, TFloat, TFloat -> TFloat
   (*Subtract Float Float *)
+  | Subtr, TFloat, TFloat -> TFloat
   (*Divide Float Float *)
+  | Divd, TFloat, TFloat -> TFloat
   (*Multiply Float Float *)
+  | Mult, TFloat, TFloat -> TFloat
 
+  (*Leq Int Int*)
   | Leq, TInt, TInt -> TBool
   (*Leq Float Float*)
   | Leq, TFloat, TFloat -> TBool
@@ -174,11 +179,20 @@ and eval_bop bop e1 e2 =
   (*Add, Float Float*)
   | Add, Float a, Float b -> Float (round_dfrac 6 (a +. b))
   (*Subtract, Float Float*)
+  | Subtr, Float a, Float b -> Float (round_dfrac 6 (a -. b))
   (*Divide, Float Float*)
+  | Divd, Float a, Float b -> Float (round_dfrac 6 (a /. b))
   (*Mult, Float Float*)
+  | Mult, Float a, Float b -> Float (round_dfrac 6 (a *. b))
 
-
+  (*Leq, Float Float*)
+  | Leq , Float a, Float b -> Bool (a <= b)
+  (*Leq, Int Int*)
   | Leq , Int a, Int b -> Bool (a <= b)
+  (*Leq, Float Int*)
+  | Leq , Float a, Int b -> Bool (a <= (float b))
+  (*Leq, Int Float*)
+  | Leq , Int a, Float b -> Bool ((float a) <= b)
   | _ -> failwith bop_err
 
 (** [eval_if e1 e2 e3] is the [v] such that [if e1 then e2 ==> v]. *) 
