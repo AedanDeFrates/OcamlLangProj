@@ -1,6 +1,8 @@
 %{
 open Ast
 %}
+//Define FLOAT token
+%token <float> FLOAT
 
 %token <int> INT
 %token <string> ID
@@ -8,7 +10,7 @@ open Ast
 %token FALSE
 %token LEQ
 
-//Add Token for FLOAT_TYPE data type
+
 //Add Token for MINUS
 %token MINUS
 
@@ -17,6 +19,13 @@ open Ast
 
 %token TIMES
 %token PLUS
+
+//Add Float Operation Tokens
+%token FMINUS
+%token FDIVIDE
+%token FTIMES
+%token FPLUS
+
 %token LPAREN
 %token RPAREN
 %token LET
@@ -26,6 +35,10 @@ open Ast
 %token THEN
 %token ELSE
 %token COLON
+
+//Add Token for FLOAT_TYPE data type
+%token FLOAT_TYPE
+
 %token INT_TYPE
 %token BOOL_TYPE
 %token EOF
@@ -36,10 +49,15 @@ open Ast
 //Precedence Declarations
 
 %left LEQ 
+
 //Add precendence for MINUS
 %left PLUS MINUS
 //Add precendence for DIVIDE
 %left TIMES DIVIDE
+
+//Add precedence for Float Operations
+%left FPLUS FMINUS
+%left FTIMES FDIVIDE
 
 
 %start <Ast.expr> prog
@@ -53,7 +71,7 @@ prog:
 expr:
 	| i = INT { Int i }
 	//expr parser for FLOAT
-
+	| f = FLOAT { Float f }
   	| x = ID { Var x }
   	| TRUE { Bool true }
   	| FALSE { Bool false }
@@ -68,6 +86,12 @@ expr:
 	//implement expression handler for Division
 	| e1 = expr; DIVIDE; e2 = expr { Binop (Divd, e1, e2)}
 
+	//implement expression handlers for Float operations
+	| e1 = expr; FTIMES; e2 = expr { Binop (FMult, e1, e2) }
+	| e1 = expr; FPLUS; e2 = expr { Binop (FAdd, e1, e2) }
+	| e1 = expr; FMINUS; e2 = expr { Binop (FSubtr, e1, e2) }
+	| e1 = expr; FDIVIDE; e2 = expr { Binop (FDivd, e1, e2) }
+
   	| LET; x = ID; COLON; t = typ; EQUALS; e1 = expr; IN; e2 = expr 
 		{ Let (x, t, e1, e2) }
   	| IF; e1 = expr; THEN; e2 = expr; ELSE; e3 = expr { If (e1, e2, e3) }
@@ -77,4 +101,6 @@ expr:
 typ: 
 	| INT_TYPE { TInt }
 	| BOOL_TYPE { TBool }
+	//Add parsing rule for FLOAT_TYPE
+	| FLOAT_TYPE { TFloat }
 	;

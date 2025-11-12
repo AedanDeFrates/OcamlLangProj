@@ -14,6 +14,10 @@ You need to add the following.
 - Handle new kind of errors (e.g., `1 + 1.0 ` is not allowed). 
 
 ## Details
+### Initialize Dune and ounit2
+ eval $(opam env)
+ dune build
+ dune exec ./test/main.exe
 
 ### Addition
 For `+.` operator, we expect to pass the following unit tests.
@@ -99,5 +103,6 @@ make_t "invalid guard_float" if_guard_err "if 1.0 then 2 else 3";
 make_t "invalid leq_float" bop_err "true <= 1.0";
 make_t "invalid geq_float" bop_err "true => 1.0";
 ```
+
 
 Good luck!

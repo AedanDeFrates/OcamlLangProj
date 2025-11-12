@@ -66,12 +66,13 @@ let round_dfrac d x =
 let rec typeof env = function
   | Int _ -> TInt
   (*Type Float to TFloat*)
+  | Float _ -> TFloat
   | Bool _ -> TBool
   | Var x -> lookup env x
   | Let (x, t ,e1, e2) -> typeof_let env x t e1 e2
   | Binop (bop, e1, e2) -> typeof_bop env bop e1 e2
   | If (e1, e2, e3) -> typeof_if env e1 e2 e3
-  | _ -> failwith "TODO"
+  (*| _ -> failwith "TODO"*)
   
 (** Helper function for [typeof]. *)
 and typeof_let env x t e1 e2 = 
@@ -93,13 +94,24 @@ and typeof_bop env bop e1 e2 =
 
   | Add, TInt, TInt 
   | Mult, TInt, TInt -> TInt
+
   (*Add Float Float *)
-  (*Sutract Float Float *)
+  | FAdd, TFloat, TFloat -> TFloat
+  (*Subtract Float Float *)
+  | FSubtr, TFloat, TFloat -> TFloat
   (*Divide Float Float *)
+  | FDivd, TFloat, TFloat -> TFloat
   (*Multiply Float Float *)
+  | FMult, TFloat, TFloat -> TFloat
+
+  (*Leq Int Int*)
   | Leq, TInt, TInt -> TBool
   (*Leq Float Float*)
+  | Leq, TFloat, TFloat -> TBool
   (*Leq Float Int*)
+  | Leq, TFloat, TInt -> TBool
+  (*Leq Int Float*)
+  | Leq, TInt, TFloat -> TBool
   | _ -> failwith bop_err
   
 (** Helper function for [typeof]. *)
@@ -127,6 +139,8 @@ let rec subst e v x = match e with
   | Bool _ -> e
   | Int _ -> e
   (*must implement Float*)
+  | Float _ -> e
+
   | Binop (bop, e1, e2) -> Binop (bop, subst e1 v x, subst e2 v x)
   | Let (y, t, e1, e2) ->
     let e1' = subst e1 v x in
@@ -135,17 +149,17 @@ let rec subst e v x = match e with
     else Let (y, t, e1', subst e2 v x)
   | If (e1, e2, e3) -> 
     If (subst e1 v x, subst e2 v x, subst e3 v x)
-  | _ -> failwith "TODO"
+  (*| _ -> failwith "TODO"**)
   
 (** [eval e] the [v]such that [e ==> v]. *)
 let rec eval (e : expr) : expr = match e with
-  | Int _ | Bool _ -> e 
   (*Implements Float*)
+  | Int _ | Float _ | Bool _ -> e 
   | Var _ -> failwith unbound_var_err
   | Binop (bop, e1, e2) -> eval_bop bop e1 e2
   | Let (x, _, e1, e2) -> subst e2 (eval e1) x|> eval
   | If (e1, e2, e3) -> eval_if e1 e2 e3
-  | _ -> failwith "TODO"
+  (*| _ -> failwith "TODO"*)
 
 (** [eval_let x e1 e2] is the [v] such that [let x = e1 in e2 ==> v]. *) 
 and eval_let x e1 e2 = 
@@ -158,17 +172,27 @@ and eval_bop bop e1 e2 =
   match bop, eval e1, eval e2 with
   | Add, Int a, Int b -> Int (a + b)
   | Mult, Int a, Int b -> Int (a * b)
-  (*Minus, Int Int*)
+  (*Subtract, Int Int*)
   | Subtr, Int a, Int b -> Int (a - b)
   (*Divide, Int Int*)
   | Divd, Int a, Int b -> Int (a / b)
   (*Add, Float Float*)
-  (*Minus, Float Float*)
+  | FAdd, Float a, Float b -> Float (round_dfrac 6 (a +. b))
+  (*Subtract, Float Float*)
+  | FSubtr, Float a, Float b -> Float (round_dfrac 6 (a -. b))
   (*Divide, Float Float*)
+  | FDivd, Float a, Float b -> Float (round_dfrac 6 (a /. b))
   (*Mult, Float Float*)
+  | FMult, Float a, Float b -> Float (round_dfrac 6 (a *. b))
 
-
+  (*Leq, Float Float*)
+  | Leq , Float a, Float b -> Bool (a <= b)
+  (*Leq, Int Int*)
   | Leq , Int a, Int b -> Bool (a <= b)
+  (*Leq, Float Int*)
+  | Leq , Float a, Int b -> Bool (a <= (float b))
+  (*Leq, Int Float*)
+  | Leq , Int a, Float b -> Bool ((float a) <= b)
   | _ -> failwith bop_err
 
 (** [eval_if e1 e2 e3] is the [v] such that [if e1 then e2 ==> v]. *) 

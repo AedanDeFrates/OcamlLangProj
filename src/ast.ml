@@ -5,15 +5,23 @@ type bop =
   (*Divd*)
   | Divd
   | Mult
+
+  (*bop for Floats*)
+  | FAdd
+  | FSubtr
+  | FDivd
+  | FMult
+  
   | Leq
 
 (** [typ] represents the type of an expression. *)
 type typ =
   | TInt
-  (*add type for TFloat???*)
+  (*add type for TFloat*)
+  | TFloat
   | TBool
 
-type expr = 
+  type expr = 
 | Var of string
 | Int of int
 | Bool of bool
