@@ -13,6 +13,8 @@ type bop =
   | FMult
   
   | Leq
+  (*add GEQ bop*)
+  | Geq
 
 (** [typ] represents the type of an expression. *)
 type typ =

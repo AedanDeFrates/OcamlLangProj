@@ -10,6 +10,8 @@ open Ast
 %token FALSE
 %token LEQ
 
+// Token for GEQ
+%token GEQ
 
 //Add Token for MINUS
 %token MINUS
@@ -48,7 +50,8 @@ open Ast
 
 //Precedence Declarations
 
-%left LEQ 
+//Add precedence for GEQ
+%left LEQ GEQ
 
 //Add precendence for MINUS
 %left PLUS MINUS
@@ -76,6 +79,8 @@ expr:
   	| TRUE { Bool true }
   	| FALSE { Bool false }
 
+	//implement expression handler for GEQ
+	| e1 = expr; GEQ; e2 = expr { Binop (Geq, e1, e2) }
 
   	| e1 = expr; LEQ; e2 = expr { Binop (Leq, e1, e2) }
   	| e1 = expr; TIMES; e2 = expr { Binop (Mult, e1, e2) }
