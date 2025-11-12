@@ -18,6 +18,7 @@ rule read =
   | "true" { TRUE }
   | "false" { FALSE }
   | "<=" { LEQ }
+  (*symbol for GEQ*)
 
   (*symbol for MINUS*)
   | "-" { MINUS}

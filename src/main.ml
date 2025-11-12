@@ -112,6 +112,9 @@ and typeof_bop env bop e1 e2 =
   | Leq, TFloat, TInt -> TBool
   (*Leq Int Float*)
   | Leq, TInt, TFloat -> TBool
+
+  (*Geq cases*)
+
   | _ -> failwith bop_err
   
 (** Helper function for [typeof]. *)
@@ -193,6 +196,8 @@ and eval_bop bop e1 e2 =
   | Leq , Float a, Int b -> Bool (a <= (float b))
   (*Leq, Int Float*)
   | Leq , Int a, Float b -> Bool ((float a) <= b)
+  (*add Geq cases*)
+  
   | _ -> failwith bop_err
 
 (** [eval_if e1 e2 e3] is the [v] such that [if e1 then e2 ==> v]. *) 
